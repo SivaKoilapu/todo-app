@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Task Manager</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.container {
+    background: white;
+    width: 300px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+input {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+li {
+    list-style: none;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete {
+    background: red;
+    padding: 5px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Task Manager</h2>
+
+    <input id="taskInput" placeholder="Enter task">
+    <br>
+    <button onclick="addTask()">Add Task</button>
+    <button onclick="clearAll()">Clear All</button>
+
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function showTasks() {
+    let list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        let li = document.createElement("li");
+
+        li.innerHTML = `
+            ${task}
+            <button class="delete" onclick="deleteTask(${index})">X</button>
+        `;
+
+        list.appendChild(li);
+    });
+}
+
+function addTask() {
+    let input = document.getElementById("taskInput");
+
+    if (input.value.trim() === "") return;
+
+    tasks.push(input.value);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    input.value = "";
+    showTasks();
+}
+
+function deleteTask(index) {
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    showTasks();
+}
+
+function clearAll() {
+    tasks = [];
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    showTasks();
+}
+
+showTasks();
+</script>
+
+</body>
+</html>
